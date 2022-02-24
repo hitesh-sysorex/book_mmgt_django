@@ -1,0 +1,106 @@
+<template>
+    <div class="page no-toolbar" data-name="accountsettings">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content padd-b-5">
+            <form class="job-form" id="account-settings-form">
+                <div class="panel-data panel-has-form">
+                    <div class="panel-body padd-t-5">
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{email}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="email_address" id="email_address"
+                                                    placeholder="{{email_placeholder}}" value="{{email_address}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{str_password}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="password" id="password" placeholder="{{password_placeholder}}"
+                                                    value="{{password}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{confirm_pass}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="confirm_password" id="confirm_password"
+                                                    placeholder="{{confirm_pass_placeholder}}" value="{{confirm_password}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="col button button-large button-raised button-fill marg-t-10"
+                            @click="onSubmitForm">{{button_text}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+            },
+        },
+        methods: {
+            onSubmitForm: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var FData = new FormData($$("#account-settings-form")[0]);
+                FData.append('user_id', localStorage.getItem('userID'));
+                app.request({
+                    url: app.params.API_URL + '/account_settings_save',
+                    method: 'POST',
+                    data: FData,
+                    cache: false,
+                    dataType: 'application/json',
+                    crossDomain: true,
+                    contentType: 'multipart/form-data',
+                    processData: true,
+                    success: function (responseObj) {
+                        var responseObj = JSON.parse(responseObj);
+                        app.preloader.hide();
+                        var toastTop = app.toast.create({
+                            text: responseObj.data.info_msg,
+                            position: 'top',
+                            closeTimeout: 2000,
+                        });
+                        toastTop.open();
+                    }
+                });
+            },
+        },
+    };
+</script>

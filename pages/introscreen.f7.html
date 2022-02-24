@@ -1,0 +1,94 @@
+<template>
+    <div class="page no-navbar no-toolbar" data-name="introscreen">
+        <div class="page-content">
+            <div data-pagination='{"el": ".swiper-pagination"}'
+                class="intro-panel swiper-container swiper-init demo-swiper">
+                <div class="swiper-pagination"></div>
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide color-1">
+                        <div class="intro-panel-inner">
+                            <div class="text-holder">
+                                <h2>Post A project</h2>
+                                <p>Posting a project is FREE</p>
+                            </div>
+                            <div class="image-holder">
+                                <figure><img src="./static/graphic-tool.png"></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide color-2">
+                        <div class="intro-panel-inner">
+                            <div class="text-holder">
+                                <h2>Be your own Boss</h2>
+                                <p>Grow your Business at one place</p>
+                            </div>
+                            <div class="image-holder">
+                                <figure><img src="./static/promotion.png"></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide color-3">
+                        <div class="intro-panel-inner">
+                            <div class="text-holder">
+                                <h2>Hire Trusted Freelancers</h2>
+                                <p>Emplojo is a On Demand Curated Freelance Marketplace</p>
+                            </div>
+                            <div class="image-holder">
+                                <figure><img src="./static/hiring.png"></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide color-4">
+                        <div class="intro-panel-inner">
+                            <div class="text-holder">
+                                <div class="block-title block-title-large">Join</div>
+                                <div class="block-title block-title-medium">the most</div>
+                                <div class="block-title block-title-large">Incredible</div>
+                                <div class="block-title block-title-medium">FreeLancing Platform</div>
+
+                                <p class="row">
+                                    <a id="get_in_link" href="#" class="col button button-large button-raised button-fill color-green marg-t-50 link back">Let's get in</a>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-prev swiper-button-white"></div>
+                <div class="swiper-button-next swiper-button-white"></div>
+                <div class="skip-intro">
+                    <a href="#" class="link back">Skip</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                app.statusbar.hide();
+                var swiper = app.swiper.create('.intro-panel.swiper-container', {
+                    speed: 400,
+                    spaceBetween: 0,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: false,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+                swiper.init();
+                $$(document).on("click", "#get_in_link", function () {app.statusbar.show();});
+                $$(document).on("click", ".skip-intro .link", function () {app.statusbar.show();});
+            }
+        },
+    };
+</script>

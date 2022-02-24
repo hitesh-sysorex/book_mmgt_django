@@ -1,0 +1,77 @@
+<template>
+    <div class="page no-toolbar" data-name="blogdetail">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">Blog Detail</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block">
+                <div class="blog-detail">
+                    <div class="blog-content marg-b-25">
+                        <div class="blog-head">
+                            <div class="post-info">
+                                <span><i class="icon f7-icons">calendar</i> {{blog_date}}</span>
+                                <span><i class="icon f7-icons">chat_bubble</i> {{comments_count}}
+                                    {{comments_string}}</span>
+                            </div>
+                            <div class="item-title">
+                                <h4>{{title}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog-image">
+                        <div class="image-holder">
+                            <figure>
+                                <img src="{{blog_image}}" alt="" />
+                            </figure>
+                        </div>
+                        <div class="blog-user-chip">
+                            <div class="image-holder">
+                                <figure>
+                                    {{author_img}}
+                                </figure>
+                            </div>
+                            <div class="text-holder">
+                                <strong>{{author_name}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-body">
+                            <div class="blog-panel">
+                                {{blog_content}}
+                                <div class="item-tags marg-t-15 marg-b-15">
+                                    <div class="block-title">Tags</div>
+                                    <ul>
+                                        {{#each blog_tags}}
+                                        <li><a href="#">{{name}}</a></li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                 
+            }
+        },
+    };
+</script>

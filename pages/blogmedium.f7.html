@@ -1,0 +1,195 @@
+<template>
+    <div class="page no-toolbar" data-name="blogmedium">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">Blogs</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content infinite-scroll-content infinite-scroll-content-blog infinite-scroll"
+            data-infinite-distance="1000">
+            <div class="block">
+                <div class="blog-medium blog-list">
+                    {{#if isLoading}}
+                    <div class="blog-post skeleton-text skeleton-effect-fade">
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="post-info">
+                                    <span>________ - </span>
+                                    <span>_ ____</span>
+                                </div>
+                                <div class="item-title">
+                                    <h4><a href="#" class="">____________ ____________ ________</a></h4>
+                                </div>
+                                <div class="item-text">
+                                    <p>____ ____ ____ ____ ____ ________ ____________ ____ ____ ____ ________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-holder ">
+                            <a href="#" class="">
+                                <figure>
+                                    <div class="skeleton-block" style="width: 121px; height: 121px;"></div>
+                                </figure>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="blog-post skeleton-text skeleton-effect-fade">
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="post-info">
+                                    <span>________ - </span>
+                                    <span>_ ____</span>
+                                </div>
+                                <div class="item-title">
+                                    <h4><a href="#" class="">____________ ____________ ________</a></h4>
+                                </div>
+                                <div class="item-text">
+                                    <p>____ ____ ____ ____ ____ ________ ____________ ____ ____ ____ ________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-holder ">
+                            <a href="#" class="">
+                                <figure>
+                                    <div class="skeleton-block" style="width: 121px; height: 121px;"></div>
+                                </figure>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="blog-post skeleton-text skeleton-effect-fade">
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="post-info">
+                                    <span>________ - </span>
+                                    <span>_ ____</span>
+                                </div>
+                                <div class="item-title">
+                                    <h4><a href="#" class="">____________ ____________ ________</a></h4>
+                                </div>
+                                <div class="item-text">
+                                    <p>____ ____ ____ ____ ____ ________ ____________ ____ ____ ____ ________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-holder ">
+                            <a href="#" class="">
+                                <figure>
+                                    <div class="skeleton-block" style="width: 121px; height: 121px;"></div>
+                                </figure>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="blog-post skeleton-text skeleton-effect-fade">
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="post-info">
+                                    <span>________ - </span>
+                                    <span>_ ____</span>
+                                </div>
+                                <div class="item-title">
+                                    <h4><a href="#" class="">____________ ____________ ________</a></h4>
+                                </div>
+                                <div class="item-text">
+                                    <p>____ ____ ____ ____ ____ ________ ____________ ____ ____ ____ ________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-holder ">
+                            <a href="#" class="">
+                                <figure>
+                                    <div class="skeleton-block" style="width: 121px; height: 121px;"></div>
+                                </figure>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="blog-post skeleton-text skeleton-effect-fade">
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="post-info">
+                                    <span>________ - </span>
+                                    <span>_ ____</span>
+                                </div>
+                                <div class="item-title">
+                                    <h4><a href="#" class="">____________ ____________ ________</a></h4>
+                                </div>
+                                <div class="item-text">
+                                    <p>____ ____ ____ ____ ____ ________ ____________ ____ ____ ____ ________</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-holder ">
+                            <a href="#" class="">
+                                <figure>
+                                    <div class="skeleton-block" style="width: 121px; height: 121px;"></div>
+                                </figure>
+                            </a>
+                        </div>
+                    </div>
+                    {{else}}
+                    {{blogsList}}
+                    <div class="preloader infinite-scroll-preloader hide"></div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                var allowBlogInfinite = true;
+                self.$setState({
+                    isLoading: true,
+                });
+
+
+                //Infinit Scroll for blog
+
+                $$('.infinite-scroll-content-blog').on('infinite', function () {
+                    if (!allowBlogInfinite) return;
+                    allowBlogInfinite = false;
+                    $$('.infinite-scroll-preloader').removeClass('hide');
+                    var next_blog_api_url = localStorage.getItem("next_blog_api_url");
+                    app.request.get(next_blog_api_url, (data) => {
+                        var data = JSON.parse(data);
+                        if (data.data.template == '') {
+                            app.infiniteScroll.destroy('.infinite-scroll-content-blog');
+                            // Remove preloader
+                            $$('.infinite-scroll-preloader').remove();
+                        } else {
+                            $$('.blog-list').append(data.data.template);
+                            var next_blog_api_url = data.data.next_api;
+                            localStorage.setItem('next_blog_api_url', next_blog_api_url);
+                            allowBlogInfinite = true;
+                        }
+                    });
+                });
+
+
+                /*
+                * Blog Posts List
+                */
+                app.methods.apiCall('get', '/blog', {}, (data) => {
+                    var next_blog_api_url = data.data.next_api;
+                    localStorage.setItem('next_blog_api_url', next_blog_api_url);
+
+                    // update component state with new state
+                    self.$setState({
+                        isLoading: false,
+                        blogsList: data.data.template,
+                    });
+                });
+            }
+        },
+    };
+</script>

@@ -1,0 +1,156 @@
+<template>
+    <div class="page themecolorpage no-navbar" data-name="registrationpage">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form class="job-form display-flex justify-content-space-between align-items-flex-start registration-form-{{uniqueID}}"
+                method="GET">
+                <div class="panel-data panel-has-form panel-has-shape">
+                    <div class="panel-body">
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{email_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="email" name="email_address" id="email-address-{{uniqueID}}"
+                                                    placeholder="{{email_placeholder}}" value="">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{pass_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="password" name="password" id="password-{{uniqueID}}"
+                                                    placeholder="{{pass_placeholder}}" value="">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{firstname_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" placeholder="{{firstname_placeholder}}"
+                                                    name="first_name" id="first-name-{{uniqueID}}" value="">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{lastname_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" placeholder="{{lastname_placeholder}}"
+                                                    name="last_name" id="last-name-{{uniqueID}}" value="">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel-footer text-align-center">
+                        <div class="panel-text">
+                            <div class="panel-btn">
+                                <button type="submit"
+                                    class="button btn-login register-submit-btn-{{uniqueID}}">{{register_btn_txt}}</a>
+                            </div>
+                            <p class="text">
+                                {{login_txt}}<a href="/login/"> {{login_link_txt}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var $ = self.$;
+                var app = self.$app;
+                 
+                var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                var page_strings = app_strings.register;
+
+                var uniqueID = Math.floor(Math.random() * 10000);
+                self.$setState({
+                    uniqueID: uniqueID,
+                    title: page_strings.title,
+                    email_label: page_strings.email_label,
+                    email_placeholder: page_strings.email_placeholder,
+                    pass_label: page_strings.pass_label,
+                    pass_placeholder: page_strings.pass_placeholder,
+                    firstname_label: page_strings.firstname_label,
+                    firstname_placeholder: page_strings.firstname_placeholder,
+                    lastname_label: page_strings.lastname_label,
+                    lastname_placeholder: page_strings.lastname_placeholder,
+                    register_btn_txt: page_strings.register_btn_txt,
+                    login_txt: page_strings.login_txt,
+                    login_link_txt: page_strings.login_link_txt,
+                });
+
+                /*
+               * Registration Form Submit
+               */
+                $$(document).on("submit", ".registration-form-" + uniqueID, function (e) {
+                    e.preventDefault();
+                    app.preloader.show();
+                    var email_address = $$('input#email-address-' + uniqueID).val();
+                    var password = $$('input#password-' + uniqueID).val();
+                    var first_name = $$('input#first-name-' + uniqueID).val();
+                    var last_name = $$('input#last-name-' + uniqueID).val();
+                    var form_data = { 'first_name': first_name, 'last_name': last_name, 'email': email_address, 'password': password };
+                    app.request.post(app.params.API_URL + '/registration_submit', form_data, function (data) {
+                        var obj = JSON.parse(data);
+                        app.preloader.hide();
+                        if (obj.status == true) {
+                            localStorage.setItem('userID', obj.userInfo.ID);
+                            localStorage.setItem('userObj', obj.userInfo.data);
+                            localStorage.setItem('is_loggedin', 'true');
+
+                            //Save shortlisted on login
+                            var user_shortlisted = obj.user_shortlisted_jobs;
+                            localStorage.setItem("user_shortlisted", JSON.stringify(user_shortlisted));
+
+                            //Refresh app after login
+                            window.location.reload(true / false);
+                        } else {
+                            var toastTop = app.toast.create({
+                                text: obj.data,
+                                position: 'top',
+                                closeTimeout: 2000,
+                            });
+                            toastTop.open();
+                        }
+                    });
+
+                });
+
+
+
+
+            },
+        }
+    };
+</script>

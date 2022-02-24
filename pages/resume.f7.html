@@ -1,0 +1,133 @@
+<template>
+    <div class="page" data-name="myresume">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="panel-data">
+                <div class="panel-body">
+                    <form id="cv-builder-form" enctype="multipart/form-data">
+                        {{#if is_cv_exists}}
+                        <div class="attachment-list">
+                            <ul>
+                                <li>
+                                    <div class="attachment-inner">
+                                        <div class="image-holder ">
+                                            <i class="icon material-icons">picture_as_pdf</i>
+                                        </div>
+                                        <div class="text-holder">
+                                            <p>
+                                                <strong>{{cv_label}}</strong>
+                                                <span>23 May 19</span>
+                                            </p>
+                                            <a href="#" class="item-remove-btn">
+                                                <i class="icon f7-icons">trash</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        {{/if}}
+                        <div class="list no-hairlines-md coverletter marg-t-20">
+                            <ul>
+                                {{#if is_cv_exists}}
+                                
+                                {{else}}
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{upload_text}}</div>
+                                            <div class="item-input-wrap">
+                                                <div class="file-brows-holder">
+                                                    <input id="file_brows" type="file" name="user_cv"
+                                                        accept="application/pdf,application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                                                    <label class="button button-fill" for="file_brows">choose</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {{/if}}
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{cover_title}}</div>
+                                            <div class="item-input-wrap">
+                                                <textarea placeholder="{{cover_placeholder}}"
+                                                    name="cover_letter">{{cover_letter}}</textarea>
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="col button button-large button-raised button-fill"
+                            @click="onSubmitForm">{{button_text}}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                               /*
+                * Removing Resume Attachment
+                */
+                $$(document).on("click", ".item-remove-btn", function (e) {
+                    self.$setState({
+                        is_cv_exists: false,
+                    });
+                });
+
+
+            },
+        },
+        methods: {
+            onSubmitForm: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var FData = new FormData($$("#cv-builder-form")[0]);
+                FData.append('user_id', localStorage.getItem('userID'));
+                app.request({
+                    url: app.params.API_URL + '/cv_builder_update',
+                    method: 'POST',
+                    data: FData,
+                    cache: false,
+                    dataType: 'application/json',
+                    crossDomain: true,
+                    contentType: 'multipart/form-data',
+                    processData: true,
+                    success: function (responseObj) {
+                        var responseObj = JSON.parse(responseObj);
+                        app.preloader.hide();
+                        var toastTop = app.toast.create({
+                            text: responseObj.data.info_msg,
+                            position: 'top',
+                            closeTimeout: 2000,
+                        });
+                        toastTop.open();
+
+                    }
+                });
+            },
+        },
+
+    };
+</script>

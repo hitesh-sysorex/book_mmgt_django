@@ -1,0 +1,107 @@
+<template>
+    <div class="page job_detail_page no-navbar no-toolbar" data-name="employerdetail">
+        <div class="page-content">
+            <div class="navbar">
+                <div class="navbar-inner sliding">
+                    <div class="left">
+                        <a href="#" class="link back">
+                            <i class="icon icon-back"></i>
+                            <span class="if-not-md">Back</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="item-detail-panel">
+                <div class="item-detail-panel-content">
+                    <div class="item-detail-panel-head">
+                        <div class="item-detail-text">
+
+                            <div class="image-holder">
+                                {{#if employer_img}}
+                                <img src="{{employer_img}}" alt="">
+                                {{else}}
+                                <img src="./static/employer-logo-25-180x135.png" alt="">
+                                {{/if}}
+                            </div>
+                            <div class="text-holder">
+                                <h2>{{company_name}}</h2>
+                                <div class="job-address">{{employer_address}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-detail-panel-body">
+                        <div class="item-panel-content">
+                            <div class="item-info">
+                                {{employer_specialisms}}
+                            </div>
+                        </div>
+                        <div class="item-panel-content">
+                            <ul class="list-withicon">
+
+                                {{#each employer_custom_fields}}
+                                <li>
+                                    <div class="image-holder">
+                                        <i class="{{icon}}"></i>
+                                    </div>
+                                    <div class="text-holder">
+                                        <strong>{{label}}</strong>
+                                        <span>{{data}}</span>
+                                    </div>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="item-panel-content">
+                            <div class="item-title">
+                                <h2>{{overview_str}}</h2>
+                            </div>
+                            <div class="item-description">
+                                <p>
+                                    {{employer_description}}
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="block marg-t-5 marg-b-5">
+                <div class="item-title">
+                        <h2>Posted Jobs</h2>
+                </div>
+                <div class="list-row jobs-listings">
+                    <ul>
+                        {{employer_jobs}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                var is_loggedin = localStorage.getItem("is_loggedin");
+                var job_id = self.job_id;
+                 
+                /*
+                * Mark as Favorite / Unfavorite
+                */
+                $$(document).on("click", ".job-shortlist-class-emp", function (e) {
+                    var job_id = $$(this).data('job_id');
+                    var thisObj = $$(this);
+                    app.methods.shortlistJob(thisObj, app, 'false');
+                    thisObj.removeClass('job-shortlist-class-emp');
+
+                });
+            },
+        },
+
+    };
+
+</script>

@@ -1,0 +1,266 @@
+<template>
+    <div class="page profile_settings" data-name="profilesettings">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="panel-data">
+                <div class="panel-body">
+                    <div class="profile-setting-panel">
+                        <div class="setting-panel-head">
+                            <div class="image-holder">
+                                <figure>
+                                    <a href="#" class="pb-standalone">
+                                        <img id="camera_img_src" src="{{user_image_src}}" alt="user image">
+                                    </a>
+                                    <div class="file-brows-holder">
+                                        <form class="job-form" id="user-image-form">
+                                            <input id="image_brows" class="hide" type="file" name="user_image"
+                                                accept="image/*" @change="updateUserImage" />
+                                            <label for="image_brows"><i class="ico f7-icons">camera_fill</i></label>
+                                        </form>
+                                        <!-- <div class="fab">
+                                            <a href="#">
+                                                <i class="ico f7-icons">camera_fill</i>
+                                                <i class="icon f7-icons">close</i>
+                                            </a>
+                                            <div class="fab-buttons fab-buttons-right">
+                                                <a href="javascript:void(0)" class="link_file">
+                                                    <form class="job-form" id="user-image-form">
+                                                        <input id="image_brows" class="hide" type="file"
+                                                            name="user_image" accept="image/*"
+                                                            @change="updateUserImage" />
+                                                        <label for="image_brows"><i
+                                                                class="ico f7-icons">images_fill</i></label>
+                                                    </form>
+                                                </a>
+                                                <a href="" id="link_camera">
+                                                    <i class="ico f7-icons">camera_fill</i>
+                                                    <div id="msg" class="hide"></div>
+                                                </a>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <p id="image_name"></p>
+                                </figure>
+                            </div>
+                            <div class="text-holder">
+                                <h2>{{user_full_name}}</h2>
+                                <div class="user-email"><a href="#"> {{user_email}} </a></div>
+                            </div>
+                        </div>
+                        <div class="setting-panel-body">
+                            <div class="setting-panel-content">
+                                <div class="setting-menu">
+                                    <ul>
+                                        <li>
+                                            <a href="/editprofile/">
+                                                <div class="image-holder setting-edit">
+                                                    <i class="icon f7-icons">compose</i>
+                                                </div>
+                                                <span>
+                                                    {{personal_info}}
+                                                    <i class="icon f7-icons">chevron_right</i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/resume/">
+                                                <div class="image-holder setting-edit">
+                                                    <i class="icon f7-icons">persons</i>
+                                                </div>
+                                                <span>
+                                                    CV & Cover Letter
+                                                    <i class="icon f7-icons">chevron_right</i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/accountsettings/">
+                                                <div class="image-holder password-edit">
+                                                    <i class="icon f7-icons">card</i>
+                                                </div>
+                                                <span>
+                                                    {{account}}
+                                                    <i class="icon f7-icons">chevron_right</i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/introscreen/">
+                                                <div class="image-holder setting-edit">
+                                                    <i class="icon f7-icons">card</i>
+                                                </div>
+                                                <span>
+                                                    Intro Screen
+                                                    <i class="icon f7-icons">chevron_right</i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/locationsettings/">
+                                                <div class="image-holder account-edit ">
+                                                    <i class="icon f7-icons">placemark</i>
+                                                </div>
+                                                <span>
+                                                    {{location}}
+                                                    <i class="icon f7-icons">chevron_right</i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        {{#if logged_in}}
+                                        <li>
+                                            <a href="/logout/">
+                                                <div class="image-holder logout-edit">
+                                                    <i class="icon f7-icons">exit</i>
+                                                </div>
+                                                <span>
+                                                    {{logout}}
+                                                </span>
+                                            </a>
+                                        </li>
+                                        {{/if}}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="setting-panel-content">
+                                <div class="setting-menu-switch">
+                                    <ul>
+                                        <li>
+                                            <div class="text-holder">
+                                                <strong>{{visibility_text}}</strong>
+                                                <label class="toggle toggle-init color-theme-toggle">
+                                                    <input type="checkbox" name="cv_allow_search" id="cv_allow_search"
+                                                        @change="updateCVSearch" {{#if allow_search}} checked {{/if}}>
+                                                    <span class="toggle-icon"></span>
+                                                </label>
+                                            </div>
+                                            <p>
+                                                {{visibility_desc}}
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+
+                var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                var page_strings = app_strings.settings;
+
+
+                if (localStorage.getItem("is_loggedin") == 'true') {
+                    self.$setState({
+                        title: page_strings.title,
+                        personal_info: page_strings.personal_info,
+                        account: page_strings.account,
+                        location: page_strings.location,
+                        logout: page_strings.logout,
+                        visibility_text: page_strings.visibility_text,
+                        visibility_desc: page_strings.visibility_desc,
+                        logged_in: localStorage.getItem("is_loggedin"),
+                    });
+                }
+
+                var youtubeimgsrc = document.getElementById("camera_img_src").src;
+                var myPhotoBrowserStandalone = app.photoBrowser.create({ photos: [youtubeimgsrc] });
+                $$('.pb-standalone').on('click', function () { myPhotoBrowserStandalone.open(); });
+
+                $$(".link_file").click(function () {
+                    $$(".link_file > label").click();
+                });
+                // var camer_app = {
+                //     init: function () {
+                //         document.getElementById('link_camera').addEventListener('click', camer_app.takephoto);
+                //     },
+                //     takephoto: function () {
+                //         var opts = {
+                //             quality: 80,
+                //             destinationType: Camera.DestinationType.FILE_URI,
+                //             sourceType: Camera.PictureSourceType.CAMERA,
+                //             mediaType: Camera.MediaType.PICTURE,
+                //             encodingType: Camera.EncodingType.JPEG,
+                //             cameraDirection: Camera.Direction.BACK,
+                //             targetWidth: 300,
+                //             targetHeight: 400
+                //         };
+
+                //         navigator.camera.getPicture(camer_app.ftw, camer_app.wtf, opts);
+                //     },
+                //     ftw: function (imgURI) {
+                //         document.getElementById('msg').textContent = imgURI;
+                //         document.getElementById('camera_img_src').src = imgURI;
+
+                //     },
+                //     wtf: function (msg) {
+                //         document.getElementById('msg').textContent = msg;
+                //     }
+                // };
+                // document.addEventListener('deviceready', camer_app.init);
+            },
+        },
+        methods: {
+            updateCVSearch: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var cv_allow_search = 'no';
+                if ($$('#cv_allow_search').is(':checked')) {
+                    cv_allow_search = 'yes';
+                }
+                var user_id = localStorage.getItem('userID');
+                app.request.post(app.params.API_URL + '/update_cv_search', { user_id: user_id, cv_allow_search: cv_allow_search }, (data) => {
+                    var responseObj = JSON.parse(data);
+                    app.preloader.hide();
+                    var toastTop = app.toast.create({
+                        text: responseObj.data.info_msg,
+                        position: 'top',
+                        closeTimeout: 2000,
+                    });
+                    toastTop.open();
+                });
+            },
+            updateUserImage: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var FData = new FormData($$("#user-image-form")[0]);
+                FData.append('user_id', localStorage.getItem('userID'));
+                app.request({
+                    url: app.params.API_URL + '/user_image_update',
+                    method: 'POST',
+                    data: FData,
+                    cache: false,
+                    dataType: 'application/json',
+                    crossDomain: true,
+                    contentType: 'multipart/form-data',
+                    processData: true,
+                    success: function (responseObj) {
+                        var responseObj = JSON.parse(responseObj);
+                        self.$setState({
+                            user_image_src: responseObj.data.user_img,
+                        });
+                        app.preloader.hide();
+                    }
+                });
+            },
+
+        },
+    };
+</script>

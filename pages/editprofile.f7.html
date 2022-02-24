@@ -1,0 +1,134 @@
+<template>
+    <div class="page no-toolbar" data-name="editprofile">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content padd-b-5">
+            <form class="job-form" id="profile-settings-form">
+                <div class="panel-data panel-has-form">
+                    <div class="panel-body padd-t-5">
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{full_name_str}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="full_name" id="full_name"
+                                                    placeholder="{{full_name_placeholder}}" value="{{full_name}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{job_title_str}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="job_title" id="job_title"
+                                                    placeholder="{{job_title_placeholder}}" value="{{job_title}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{minim_salary}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="minimum_salary" id="minimum_salary"
+                                                    placeholder="{{minim_salary_placeholder}}" value="{{minimum_salary}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{phone}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="phone_number" id="phone_number"
+                                                    placeholder="{{phone_placeholder}}" value="{{phone_number}}">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar="true"
+                                        data-searchbar-placeholder="Specialisms">
+                                        <select name="user_specialisms[]" id="user_specialisms"
+                                            class="specialisms-select specialisms-list" multiple>
+                                            {{#each specialisms_list}}
+                                            <option value="{{slug}}">{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{specialisms}}</div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="col button button-large button-raised button-fill marg-t-10"
+                            @click="onSubmitForm">{{button_text}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function (pageData) {
+                const self = this;
+                var app = self.$app;
+                var page_data = pageData.detail.route.context;
+                $$('.specialisms-list').val(page_data.user_specialisms).change();
+            },
+        },
+        methods: {
+            onSubmitForm: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var FData = new FormData($$("#profile-settings-form")[0]);
+                FData.append('user_id', localStorage.getItem('userID'));
+                app.request({
+                    url: app.params.API_URL + '/user_profile_data_update',
+                    method: 'POST',
+                    data: FData,
+                    cache: false,
+                    dataType: 'application/json',
+                    crossDomain: true,
+                    contentType: 'multipart/form-data',
+                    processData: true,
+                    success: function (responseObj) {
+                        var responseObj = JSON.parse(responseObj);
+                        app.preloader.hide();
+                        var toastTop = app.toast.create({
+                            text: responseObj.data.info_msg,
+                            position: 'top',
+                            closeTimeout: 2000,
+                        });
+                        toastTop.open();
+                    }
+                });
+            },
+        },
+    };
+</script>

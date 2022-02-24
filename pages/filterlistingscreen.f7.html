@@ -1,0 +1,209 @@
+<template>
+    <div class="page no-toolbar" data-name="filterlistingscreen">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar toolbar-bottom toolbar-btn">
+            <div class="toolbar-btn-holder">
+                <p class="row">
+                    <label for="Search_job"
+                        class="col button job-search-submit button-raised button-fill">{{search}}</label>
+                    <label form="clear_cilters" class="col button button-raised button-fill color-red"
+                        @click="clearForm">{{clear}}</label>
+                </p>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="panel-data">
+                <div class="panel-body">
+                    <div class="list filter-list has-no-arrow">
+                        <form id="jobs-search-filters" method="GET" action="#">
+                            <ul>
+                                <!-- Default Setup -->
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{keyw_title}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="job_title" id="job_title"
+                                                    placeholder="{{keyw_placeholder}}" value="{{job_title}}" validate>
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="" class="location-btn hide">
+                                        <i class="icon-map5"></i>
+                                    </a>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar="true" id="smart-select-country"
+                                        data-searchbar-placeholder="{{loc_placeholder}}">
+                                        <select name="user_country" id="user_country"
+                                            class="country-select countries-list">
+                                            <option value="all" selected>All Countries</option>
+                                            {{#each countries_list}}
+                                            <option value="{{slug}}">{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">{{loc_title}}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <!-- Open In Popup + Searchbar + Multiple -->
+                                <li>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar="true" id="smart-select-specialisms"
+                                        data-searchbar-placeholder="{{specialisms_placeholder}}">
+                                        <select name="specialisms" id="specialisms" class="specialisms-select">
+                                            <option value="all" selected>All Specialisms</option>
+                                            {{#each specialisms_data}}
+                                            <option value="{{@key}}">{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">{{specialisms_title}}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <!-- Open In Sheet -->
+                                <li>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar-placeholder="{{vacancy_placeholder}}" id="smart-select-vacancy">
+                                        <select name="vacancy_type" class="vacancytype-select">
+                                            <option value="all" selected>All Types</option>
+                                            {{#each vacancy_type}}
+                                            <option value="{{@key}}">{{this}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title item-label">{{vacancy_title}}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <p class="row">
+                                <input type="hidden" name="tab_id" value="jobfiltersID">
+                                <button id="Search_job"
+                                    class="col button job-search-submit button-raised button-fill hide">{{search}}</button>
+                                <button type="button" id="clear_cilters"
+                                    class="col button button-raised button-fill color-red hide hide"
+                                    @click="clearForm">{{clear}}</button>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                var allowInfinite = true;
+
+                var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                var page_strings = app_strings.jobs_listings;
+
+                self.$setState({
+                    job_title: localStorage.getItem("job_title"),
+                    title: page_strings.filters,
+                    keyw_title: page_strings.keyw_title,
+                    keyw_placeholder: page_strings.keyw_placeholder,
+                    loc_title: page_strings.loc_title,
+                    loc_placeholder: page_strings.loc_placeholder,
+                    specialisms_title: page_strings.specialisms_title,
+                    specialisms_placeholder: page_strings.specialisms_placeholder,
+                    vacancy_title: page_strings.vacancy_title,
+                    vacancy_placeholder: page_strings.vacancy_placeholder,
+                    dateposted_title: page_strings.dateposted_title,
+                    clear: page_strings.clear,
+                    search: page_strings.search,
+                });
+
+                localStorage.setItem('job_title', '');
+
+                //Get Filters Values from API
+                app.request.get(app.params.API_URL + '/job_filters', (data) => {
+                    var data = JSON.parse(data);
+                    var obj = data.data;
+                    self.$setState({
+                        specialisms_data: obj.form_fields.specialisms_dropdown.data,
+                        vacancy_type: obj.form_fields.job_type_dropdown.data,
+                        countries_list: obj.form_fields.countries_list,
+                    });
+
+                    $$('#specialisms, #user_country, [name="vacancy_type"], #dateposted-listID').on('change', function () {
+                        var smart_select_id = $$(this).closest('.smart-select').attr('id');
+                        var smartSelect = app.smartSelect.get('#'+smart_select_id);
+                        smartSelect.close();
+                    });
+
+                    
+                    if (localStorage.getItem("specialisms") != null && localStorage.getItem("specialisms") != undefined && localStorage.getItem("specialisms") != 'all') {
+                        $$('.specialisms-select').val(localStorage.getItem("specialisms")).change();
+                        localStorage.removeItem('specialisms');
+                    }
+                    if (localStorage.getItem("vacancy_type") != null && localStorage.getItem("vacancy_type") != undefined && localStorage.getItem("vacancy_type") != 'all') {
+                        $$('.vacancytype-select').val(localStorage.getItem("vacancy_type")).change();
+                        localStorage.removeItem('vacancy_type');
+                    }
+
+                    if (localStorage.getItem("user_country") != null && localStorage.getItem("user_country") != undefined && localStorage.getItem("user_country") != 'all') {
+                        $$('.countries-list').val(localStorage.getItem("user_country")).change();
+                        localStorage.removeItem('user_country');
+                    }
+
+                });
+
+                $$('.location-btn').on('click', function () {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function (position) {
+                            var positionInfo = "Your current position is (" + "Latitude: " + position.coords.latitude + ", " + "Longitude: " + position.coords.longitude + ")";
+                            var notificationFull = app.notification.create({
+                                icon: '<i class="icon demo-icon">7</i>',
+                                title: 'Geo Location',
+                                text: positionInfo,
+                            });
+                            notificationFull.open();
+                        });
+                    } else {
+                        alert("Sorry, your browser does not support HTML5 geolocation.");
+                    }
+                });
+
+            },
+        },
+        methods: {
+            clearForm: function () {
+                const self = this;
+                var app = self.$app;
+                $$('#jobs-search-filters')[0].reset();
+                $$('.specialisms-select').val('').change();
+                $$('.vacancytype-select').val('').change();
+                $$('.countries-list').val('').change();
+                $$('.dateposted-list').val('').change();
+            },
+        },
+
+    };
+</script>

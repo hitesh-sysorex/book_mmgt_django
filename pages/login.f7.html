@@ -1,0 +1,139 @@
+<template>
+    <div class="page themecolorpage no-navbar" data-name="loginpage">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            <form class="job-form display-flex justify-content-space-between align-items-flex-start jobcareer-form-{{uniqueID}}">
+                <div class="panel-data panel-has-form panel-has-shape">
+                    <div class="panel-body">
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{user_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="username" id="username-{{uniqueID}}" placeholder="{{user_placeholder}}"
+                                                    value="" validate>
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{pass_label}}</div>
+                                            <div class="item-input-wrap">
+                                                <input type="password" name="password" id="password-{{uniqueID}}"
+                                                    placeholder="{{pass_placeholder}}" value="">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="form-forget-text text-align-right">
+                                <a href="/forgetpassword/">{{forgot_pass}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer text-align-center">
+                        <div class="panel-text">
+                            <div class="panel-btn">
+                                <a href="/registration/" class="button btn-signup">{{sign_up}}</a>
+                                <button type="submit" class="button btn-login signin-submit-btn-{{uniqueID}}">{{sign_in}}</button>
+                            </div>
+                            <!-- <div class="or-login-other">
+                                <span>or login with</span>
+                            </div>
+                            <div class="panel-social">
+                                <ul>
+                                    <li><a href=""><i class="f7-icons">logo_google</i></a></li>
+                                    <li><a href="#"><i class="f7-icons">logo_facebook</i></a></li>
+                                </ul>
+                            </div> -->
+                            <p class="text">
+                                {{signup_txt}} <a href="/registration/">{{signup_link_txt}}</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var $ = self.$;
+                var app = self.$app;
+
+                var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                var page_strings = app_strings.login;
+
+                 
+                var uniqueID = Math.floor(Math.random() * 10000);
+                self.$setState({
+                    uniqueID: uniqueID,
+                    title : page_strings.title,
+                    user_label : page_strings.user_label,
+                    user_placeholder : page_strings.user_placeholder,
+                    pass_label : page_strings.pass_label,
+                    pass_placeholder : page_strings.pass_placeholder,
+                    forgot_pass : page_strings.forgot_pass,
+                    sign_up : page_strings.sign_up,
+                    sign_in : page_strings.sign_in,
+                    signup_txt : page_strings.signup_txt,
+                    signup_link_txt : page_strings.signup_link_txt,
+                });
+
+                 /*
+                * Login Form Submit
+                */
+                $$(document).on("submit", ".jobcareer-form-"+uniqueID, function (e) {
+                    e.preventDefault();
+                    var username = $$('input#username-'+uniqueID).val();
+                    var password = $$('input#password-'+uniqueID).val();
+                    app.preloader.show();
+                    var shortlisted_jobs = localStorage.getItem("shortlisted_jobs");
+                    app.request.post(app.params.API_URL+'/login_submit?username=' + username + '&password=' + password, {shortlisted_jobs: shortlisted_jobs}, function (data) {
+                        var obj = JSON.parse(data);
+                        app.preloader.hide();
+                        if (obj.status == true) {
+                            localStorage.setItem('userID', obj.userInfo.ID);
+                            localStorage.setItem('userObj', obj.userInfo.data);
+                            localStorage.setItem('is_loggedin', 'true');
+                            
+                            //Save shortlisted on login
+                            var user_shortlisted = obj.user_shortlisted_jobs;
+                            localStorage.setItem("user_shortlisted", JSON.stringify(user_shortlisted));
+
+                            //Refresh app after login
+                            window.location.reload(true / false);
+                        } else {
+                            var toastTop = app.toast.create({
+                                text: obj.data,
+                                position: 'top',
+                                closeTimeout: 2000,
+                            });
+                            toastTop.open();
+                        }
+                    });
+                });
+
+
+
+
+            },
+        }
+    };
+</script>

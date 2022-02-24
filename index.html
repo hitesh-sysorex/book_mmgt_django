@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--
+  Customize this policy to fit your own app's needs. For more guidance, see:
+      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+  Some notes:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+      * Enable inline JS: add 'unsafe-inline' to default-src
+  -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:"> -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: gap: 'unsafe-inline' https://ssl.gstatic.com  'unsafe-eval'; style-src * 'unsafe-inline'; media-src *">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+
+    <meta name="theme-color" content="#4a72e1">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>Job Carrer</title>
+
+
+
+
+    <!-- built styles file will be auto injected -->
+</head>
+
+<body>
+    <div id="app">
+        <!-- Status bar overlay for fullscreen mode-->
+        <!-- <div class="statusbar"></div> -->
+        <!-- <div class="panel panel-left panel-cover panel-menu">
+            <div class="view">
+                <div class="page">
+                    <div class="page-content">
+                        <div class="setting-menu">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder setting-edit">
+                                            <i class="icon f7-icons">compose</i>
+                                        </div>
+                                        <span>
+                                            Edit Profile
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder account-edit">
+                                            <i class="icon f7-icons">placemark</i>
+                                        </div>
+                                        <span>
+                                            Account Settings
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder password-edit">
+                                            <i class="icon f7-icons">card</i>
+                                        </div>
+                                        <span>
+                                            Change Password
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder letter-edit">
+                                            <i class="icon f7-icons">star</i>
+                                        </div>
+                                        <span>
+                                            My Cover Letter
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder cv-edit">
+                                            <i class="icon f7-icons">refresh_round</i>
+                                        </div>
+                                        <span>
+                                            My CV
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/registration/">
+                                        <div class="image-holder password-edit">
+                                            <i class="icon f7-icons">document_text</i>
+                                        </div>
+                                        <span>
+                                            Registration
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/">
+                                        <div class="image-holder letter-edit">
+                                            <i class="icon f7-icons">enter</i>
+                                        </div>
+                                        <span>
+                                            Log in
+                                            <i class="icon f7-icons">chevron_right</i>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="image-holder logout-edit">
+                                            <i class="icon f7-icons">exit</i>
+                                        </div>
+                                        <span>
+                                            Log Out
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- <div class="view view-main view-init safe-areas" data-url="/"></div> -->
+
+
+        <!-- Left panel with cover effect when hidden -->
+        <div class="views tabs safe-areas">
+            <div class="toolbar toolbar-bottom tabbar-labels main-tabbar">
+                <div class="toolbar-inner">
+                    <a href="#homeID" id="homeIDTab" class="tab-link tab-link-active">
+                        <i class="icon-fancy-home"></i>
+                        <span class="tabbar-label">Home</span>
+                    </a>
+                    <a href="#jobfiltersID" id="jobfiltersIDTab" class="tab-link jobfiltersClass">
+                        <i class="icon-fancy-search"></i>
+                        <span class="tabbar-label">Find Jobs</span>
+                    </a>
+                    <a href="#employersListingsID" id="employersListingsIDTab" class="tab-link">
+                        <i class="icon-fancy-users"></i>
+                        <span class="tabbar-label">Employers</span>
+                    </a>
+                    <a href="#joblistingsID" id="joblistingsIDTab" class="tab-link myjobs-tabs joblistingsClass">
+                        <i class="icon-fancy-heart"><span class="badge color-red">0</span></i>
+                        <span class="tabbar-label">My Jobs</span>
+                    </a>
+                    <a href="#profilesettingID" class="tab-link profilesettingClass">
+                        <i class="icon-fancy-gear"></i>
+                        <span class="tabbar-label">Settings</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Your main view, should have "view-main" class -->
+
+            <!-- Home View -->
+            <div id="homeID" class="view view-main view-init tab tab-active" data-url="/home/">
+                <!-- Home page will be loaded here dynamically from / route -->
+            </div>
+
+            <!-- Job Filters View -->
+            <div id="jobfiltersID" class="view view-main view-init tab" data-url="/joblistings/">
+                <!-- Job Filter page will be loaded here dynamically from / route -->
+            </div>
+
+            <!-- Employers Listing View -->
+            <div id="employersListingsID" class="view view-init tab" data-view="employersListings"
+                data-url="/employerslisting/">
+                <!-- Employers Listings page will be loaded here dynamically from /employerslisting/ route -->
+            </div>
+
+            <!-- Find Search View -->
+            <div id="joblistingsID" class="view view-main view-init tab" data-url="/myjobs/">
+                <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
+            </div>
+
+            <!-- Profile Settings View -->
+            <div id="profilesettingID" class="view view-init tab" data-view="profilesettings"
+                data-url="/profilesetting/">
+                <!-- Settings page will be loaded here dynamically from /settings/ route -->
+            </div>
+
+        </div>
+
+
+        <% if (process.env.TARGET === 'cordova') { %>
+        <script src="cordova.js"></script>
+        <% } %>
+        <!-- built script files will be auto injected -->
+
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+<template>
+        <div class="page" data-name="jobfilters">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left">
+                        <div class="title">{{page_title}}</div>
+                    </div>
+                    <div class="right">
+                        <a class="button filter-job-btn" href="/filterlistingscreen/">
+                            <i class="icon f7-icons">filter</i>{{filters}}<span class="counter">{{filterscount}}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="page-content infinite-scroll-content infinite-scroll-content-jobs infinite-scroll"
+            data-infinite-distance="1000">
+                <div class="panel-data panel-data-has-tabs">
+                    <!-- <div class="panel-head">
+                        <div class="page-title has-filter">
+                            <h2>Find Jobs</h2>
+                            
+                        </div>
+                    </div> -->
+                    <div class="panel-body">
+                        <div class="page-content">
+                            <a class="google-login hide" href="#">Google Login</a>
+                            <div class="list-row jobs-listings jobs-animation">
+                                {{#if isLoading}}
+                                <ul>
+                                    <li class="item-content skeleton-text skeleton-effect-fade">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">____ __________</div>
+                                            </div>
+                                            <div class="item-subtitle">____ ____ ____ _____ ___ __ ____ __ __ ____ __</div>
+                                            <div class="item-subtitle">____ _______ ____ ___ ____ </div>
+                                            <div class="item-text">____ ____ ____ ___</div>
+                                            <span href="#" class="item-favorite"><i
+                                                    class="icon f7-icons">heart_fill</i></span>
+                                        </div>
+                                    </li>
+                                    <li class="item-content skeleton-text skeleton-effect-fade">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">____ __________</div>
+                                            </div>
+                                            <div class="item-subtitle">____ ____ ____ _____ ___ __ ____ __ __ ____ __</div>
+                                            <div class="item-subtitle">____ _______ ____ ___ ____ </div>
+                                            <div class="item-text">____ ____ ____ ___</div>
+                                            <span href="#" class="item-favorite"><i
+                                                    class="icon f7-icons">heart_fill</i></span>
+                                        </div>
+                                    </li>
+                                    <li class="item-content skeleton-text skeleton-effect-fade">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">____ __________</div>
+                                            </div>
+                                            <div class="item-subtitle">____ ____ ____ _____ ___ __ ____ __ __ ____ __</div>
+                                            <div class="item-subtitle">____ _______ ____ ___ ____ </div>
+                                            <div class="item-text">____ ____ ____ ___</div>
+                                            <span href="#" class="item-favorite"><i
+                                                    class="icon f7-icons">heart_fill</i></span>
+                                        </div>
+                                    </li>
+                                    <li class="item-content skeleton-text skeleton-effect-fade">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">____ __________</div>
+                                            </div>
+                                            <div class="item-subtitle">____ ____ ____ _____ ___ __ ____ __ __ ____ __</div>
+                                            <div class="item-subtitle">____ _______ ____ ___ ____ </div>
+                                            <div class="item-text">____ ____ ____ ___</div>
+                                            <span href="#" class="item-favorite"><i
+                                                    class="icon f7-icons">heart_fill</i></span>
+                                        </div>
+                                    </li>
+                                    <li class="item-content skeleton-text skeleton-effect-fade">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">____ __________</div>
+                                            </div>
+                                            <div class="item-subtitle">____ ____ ____ _____ ___ __ ____ __ __ ____ __</div>
+                                            <div class="item-subtitle">____ _______ ____ ___ ____ </div>
+                                            <div class="item-text">____ ____ ____ ___</div>
+                                            <span href="#" class="item-favorite"><i
+                                                    class="icon f7-icons">heart_fill</i></span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                {{else}}
+                                <ul>
+                                    {{jobsList}}
+                                </ul>
+                                <div class="preloader infinite-scroll-preloader hide"></div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+        import $$ from 'dom7';
+        export default {
+            on: {
+                pageInit: function () {
+                    const self = this;
+                    var app = self.$app;
+                    var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                    var page_strings = app_strings.jobs_listings;
+                    var is_loggedin = localStorage.getItem("is_loggedin");
+                    var allowInfinite = true;
+                    self.$setState({
+                        isLoading: true,
+                        page_title: page_strings.title,
+                        filters: page_strings.filters,
+                        filterscount: 0,
+                    });
+                    var user_id = localStorage.getItem("userID");
+                    var query_params = app.view.main.router.currentRoute.query;
+    
+                    var shortlisted_jobs = localStorage.getItem("shortlisted_jobs");
+                    shortlisted_jobs = (shortlisted_jobs == null) ? [] : JSON.parse(shortlisted_jobs);
+    
+                    var query_build = 'user_id=' + user_id + '&shortlisted_jobs=' + shortlisted_jobs.join(',') + '&';
+                    var filterscount = 0;
+                    if (query_params.job_title != undefined && query_params.job_title != '') {
+                        localStorage.setItem('job_title', query_params.job_title);
+                        var query_build = 'job_title=' + query_params.job_title + '&';
+                        filterscount = parseInt(filterscount) + 1;
+                    }
+    
+                    if (query_params.user_country != undefined && query_params.user_country != '' && query_params.user_country != 'all') {
+                        localStorage.setItem('user_country', query_params.user_country);
+                        //var query_build = query_build + 'job_type_string=' + query_params.vacancy_type + '&';
+                        filterscount = parseInt(filterscount) + 1;
+                    }
+    
+    
+                    if (query_params.specialisms != undefined && query_params.specialisms != '' && query_params.specialisms != 'all') {
+                        localStorage.setItem('specialisms', query_params.specialisms);
+                        var query_build = query_build + 'specialisms_string=' + query_params.specialisms + '&';
+                        filterscount = parseInt(filterscount) + 1;
+                    }
+    
+                    if (query_params.vacancy_type != undefined && query_params.vacancy_type != '' && query_params.vacancy_type != 'all') {
+                        localStorage.setItem('vacancy_type', query_params.vacancy_type);
+                        var query_build = query_build + 'job_type_string=' + query_params.vacancy_type + '&';
+                        filterscount = parseInt(filterscount) + 1;
+                    }
+    
+                    $$('.infinite-scroll-content-jobs').on('infinite', function () {
+                        if (!allowInfinite) return;
+                        allowInfinite = false;
+                        $$('.infinite-scroll-preloader').removeClass('hide');
+                        var next_api_url = localStorage.getItem("next_api_url");
+                        app.request.get(next_api_url, (data) => {
+                            var data = JSON.parse(data);
+                            if (data.data.data_exists == 'no') {
+                                app.infiniteScroll.destroy('.infinite-scroll-content-jobs');
+                                // Remove preloader
+                                $$('.infinite-scroll-preloader').remove();
+                            } else {
+                                $$('.jobs-listings ul').append(data.data.template);
+                                var next_api_url = data.data.next_api;
+                                localStorage.setItem('next_api_url', next_api_url);
+                                allowInfinite = true;
+                            }
+                        });
+                    });
+    
+                    // request user data on page init
+    
+                    app.methods.apiCall('get','/job_results?'+ query_build, {}, (data) => {
+                        var next_api_url = data.data.next_api;
+                        localStorage.setItem('next_api_url', next_api_url);
+    
+                        // update component state with new state
+                        self.$setState({
+                            isLoading: false,
+                            jobsList: data.data.template,
+                            filterscount: filterscount
+                        });
+                    });
+    
+    
+    
+                    /*
+                    * Mark as Favorite / Unfavorite
+                    */
+                    $$(document).on("click", ".job-shortlist-class", function (e) {
+                        var job_id = $$(this).data('job_id');
+                        var thisObj = $$(this);
+
+                        app.methods.shortlistJob(thisObj, app);
+    
+                    });
+    
+    
+                },
+            },
+    
+        };
+    
+    </script>

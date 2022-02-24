@@ -1,0 +1,126 @@
+<template>
+    <div class="page no-toolbar" data-name="locationsettings">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                    <div class="title">{{title}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content padd-b-5">
+            <form class="job-form" id="location-settings-form">
+                <div class="panel-data panel-has-form">
+                    <div class="panel-body padd-t-5">
+                        <div class="list no-hairlines-md">
+                            <ul>
+                                <li>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="Country">
+                                        <select name="user_country" id="user_country"
+                                            class="country-select countries-list" @change="countryChange">
+                                            {{#each countries_list}}
+                                            <option value="{{slug}}">{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{country}}</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="item-link smart-select smart-select-init field-select"
+                                        data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="City">
+                                        <select name="user_city" id="user_city" class="country-select cities-list">
+                                            {{#each cities_list}}
+                                            <option value="{{slug}}">{{name}}</option>
+                                            {{/each}}
+                                        </select>
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{city}}</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="item-content item-input item-input-with-info">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">{{address}}</div>
+                                            <div class="item-input-wrap">
+                                                <textarea name="user_address" id="user_address"
+                                                    placeholder="{{address_placeholder}}" value="{{user_address}}"></textarea>
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <button type="button" class="col button button-large button-raised button-fill marg-t-10"
+                            @click="onSubmitForm">{{button_text}}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function (pageData) {
+                const self = this;
+                var app = self.$app;
+                var page_data = pageData.detail.route.context;
+
+                $$('.countries-list').val(page_data.user_country).change();
+                $$('.cities-list').val(page_data.user_city).change();
+            },
+        },
+        methods: {
+            onSubmitForm: function () {
+                const self = this;
+                var app = self.$app;
+                app.preloader.show();
+                var FData = new FormData($$("#location-settings-form")[0]);
+                FData.append('user_id', localStorage.getItem('userID'));
+                app.request({
+                    url: app.params.API_URL + '/user_location_update',
+                    method: 'POST',
+                    data: FData,
+                    cache: false,
+                    dataType: 'application/json',
+                    crossDomain: true,
+                    contentType: 'multipart/form-data',
+                    processData: true,
+                    success: function (responseObj) {
+                        var responseObj = JSON.parse(responseObj);
+                        app.preloader.hide();
+                        var toastTop = app.toast.create({
+                            text: responseObj.data.info_msg,
+                            position: 'top',
+                            closeTimeout: 2000,
+                        });
+                        toastTop.open();
+                    }
+                });
+            },
+            countryChange: function () {
+                const self = this;
+                var app = self.$app;
+                var countrySlug = $$('.countries-list').val();
+                app.request.get(app.params.API_URL + '/get_cities?country_slug=' + countrySlug, (data) => {
+                    var dataObj = JSON.parse(data);
+                    var dataObj = dataObj.data;
+                    self.$setState({
+                        cities_list: dataObj.cities_list
+                    });
+                    $$('.cities-list').val(self.user_city).change();
+                });
+            },
+
+        },
+    };
+</script>

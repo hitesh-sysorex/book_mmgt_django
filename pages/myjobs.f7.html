@@ -1,0 +1,399 @@
+<template>
+    <div class="page page-with-subnavbar" data-name="myjobs">
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="title">My Jobs</div>
+                <div class="subnavbar">
+                    <div class="subnavbar-inner">
+                        <div class="segmented segmented-raised">
+                            <a href="#shortListed" class="button tab-link tab-link-active">
+                                {{shortlisted_tab}}
+                            </a>
+                            <a href="#applied" class="button tab-link ">
+                                {{applied_tab}}
+                            </a>
+                            <a href="#viewed" class="button tab-link ">
+                                {{viewed_tab}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabs-swipeable-wrap">
+            <div class="tabs">
+                <!-- Your shortListed main view/tab, should have "view-main" class. It also has "tab-active" class -->
+                <div id="shortListed" class="page-content tab tab-active">
+                    <div class="block">
+                        <div class="list-row my-jobs-list jobs-animation">
+                            {{#if isLoading}}
+                            <ul>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {{else}}
+                            <ul>
+                                {{shortListedJobs}}
+                                {{#if shortlistedNoJobs}}
+                                <div
+                                    class="text-align-center padd-t-40 padd-l-15 padd-r-15 display-flex align-items-center justify-content-center">
+                                    <div class="not-found-screen">
+                                        <div class="text-big">
+                                            <img src="./static/search-in-folder.png" alt />
+                                        </div>
+                                        <div class="text">
+                                            <strong>No Items Found</strong>
+                                            <p>To add a favorite. Tap the heart on any jobs</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </ul>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <!-- Applied View -->
+                <div id="applied" class="page-content tab">
+                    <div class="block">
+                        <div class="list-row applied-jobs-list jobs-animation">
+                            {{#if isAppliedLoading}}
+                            <ul>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {{else}}
+                            <ul>
+                                {{appliedListedJobs}}
+                            </ul>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div id="viewed" class="page-content tab">
+                    <div class="block">
+                        <div class="list-row viewed-jobs-list jobs-animation">
+                            {{#if isviewdJobsLoading}}
+                            <ul>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                                <li class="item-content skeleton-text skeleton-effect-fade">
+                                    <div class="item-inner">
+                                        <div class="item-title-row">
+                                            <div class="item-title">____ _____</div>
+                                        </div>
+                                        <div class="item-subtitle">____ _______</div>
+                                        <div class="item-text">____ ____ ____ _____ ___ __ ____ __ ________ __
+                                            ____ ___ ____</div>
+                                    </div>
+                                </li>
+                            </ul>
+                            {{else}}
+                            <ul>
+                                {{viewdJobs}}
+                            </ul>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="toolbar tabbar toolbar-top job-tabbar">
+            <div class="toolbar-inner">
+                <a href="#shortListed" class="tab-link tab-link-active">
+                    {{shortlisted_tab}}
+                </a>
+                <a href="#applied" class="tab-link">
+                    {{applied_tab}}
+                </a>
+                <a href="#viewed" class="tab-link">
+                    Viewed
+                </a>
+            </div>
+        </div> -->
+    </div>
+</template>
+<script>
+    import $$ from 'dom7';
+    export default {
+        on: {
+            pageInit: function () {
+                const self = this;
+                var app = self.$app;
+                var is_loggedin = localStorage.getItem("is_loggedin");
+                var user_id = localStorage.getItem("userID");
+                var app_strings = JSON.parse(localStorage.getItem("app_strings"));
+                var page_strings = app_strings.myjobs;
+
+                self.$setState({
+                    isLoading: true,
+                    isAppliedLoading: true,
+                    isviewdJobsLoading: true,
+                    applied_tab: page_strings.applied_tab,
+                    viewed_tab: page_strings.viewed_tab,
+                    shortlisted_tab: page_strings.shortlisted_tab,
+                    shortlistedNoJobs: true,
+                });
+                // request user data on page init
+
+                if (is_loggedin == 'true') {
+
+
+                    self.$setState({
+                        shortlistedNoJobs: false,
+                    });
+
+                    app.methods.apiCall('get', '/shortlisted_jobs?user_id=' + user_id, {}, (data) => {
+                        $$('.myjobs-tabs .badge').html(data.data.total_jobs);
+                        self.$setState({
+                            isLoading: false,
+                            shortListedJobs: data.data.template,
+                        });
+                    });
+
+                } else {
+                    var shortlisted_jobs = localStorage.getItem("shortlisted_jobs");
+
+                    shortlisted_jobs = (shortlisted_jobs == null) ? [] : JSON.parse(shortlisted_jobs);
+                    app.methods.apiCall('get', '/local_shortlisted_jobs', { shortlisted_jobs: shortlisted_jobs.join(',') }, (data) => {
+                        self.$setState({
+                            isLoading: false,
+                            shortListedJobs: data.data.template,
+                        });
+                    });
+
+                    if (shortlisted_jobs.length > 0) {
+                        self.$setState({
+                            shortlistedNoJobs: false,
+                        });
+                    } else {
+                        self.$setState({
+                            shortlistedNoJobs: true,
+                        });
+                    }
+                    $$('.myjobs-tabs .badge').html(shortlisted_jobs.length);
+                }
+
+                var viewed_jobs = localStorage.getItem("viewed_jobs");
+                viewed_jobs = (viewed_jobs == null) ? [] : JSON.parse(viewed_jobs);
+
+                app.methods.apiCall('get', '/local_viewed_jobs', { viewed_jobs: viewed_jobs.join(',') }, (data) => {
+                    self.$setState({
+                        isviewdJobsLoading: false,
+                        viewdJobs: data.data.template,
+                    });
+                });
+
+                if (is_loggedin == 'true') {
+                    //Applied Jobs List
+                    app.methods.apiCall('get', '/applied_jobs?user_id=' + user_id, {}, (data) => {
+                        self.$setState({
+                            isAppliedLoading: false,
+                            appliedListedJobs: data.data.template,
+                        });
+                    });
+                } else {
+                    self.$setState({
+                        isAppliedLoading: false,
+                        appliedListedJobs: '<div class="text-align-center padd-t-40 padd-l-15 padd-r-15 display-flex align-items-center justify-content-center"> <div class="not-found-screen"> <div class="text-big"> <img src="./static/search-in-folder.png" alt /> </div> <div class="text"> <strong>Jobs Not Found</strong> <p class="marg-b-5">Currently logout. Login to see your applied jobs.</p> <a href="/login/">Please Login to Continue</a> </div> </div> </div>',
+                    });
+                }
+
+
+
+                /*
+                * Mark as Favorite / Unfavorite
+                */
+                $$(document).on("click", ".job-shortlist-remove-class", function (e) {
+                    var job_id = $$(this).data('job_id');
+                    var user_id = localStorage.getItem("userID");
+                    if (is_loggedin == 'true') {
+                        app.preloader.show();
+                        app.methods.apiCall('post', '/remove_favourite', { 'user_id': user_id, 'job_id': job_id }, (data) => {
+                            if (data.status == true) {
+                                $$(this).closest('li').addClass('moveblaster');
+                                setTimeout(() => {
+                                    $$(this).closest('li').remove();
+                                }, 200);
+                                localStorage.setItem("reLoadTab_jobfiltersID", 'true');
+
+                                //Removing & Saving into User Shortlisted Storage
+                                var user_shortlisted = localStorage.getItem("user_shortlisted");
+                                user_shortlisted = (user_shortlisted == null) ? [] : JSON.parse(user_shortlisted);
+                                removeFromArray(user_shortlisted, job_id);
+                                localStorage.setItem("user_shortlisted", JSON.stringify(user_shortlisted));
+                                $$('.myjobs-tabs .badge').html(user_shortlisted.length);
+                                app.preloader.hide();
+                            }
+                        });
+                    } else {
+                        var shortlisted_jobs = localStorage.getItem("shortlisted_jobs");
+                        shortlisted_jobs = (shortlisted_jobs == null) ? [] : JSON.parse(shortlisted_jobs);
+                        removeFromArray(shortlisted_jobs, job_id);
+                        localStorage.setItem("shortlisted_jobs", JSON.stringify(shortlisted_jobs));
+
+                        //Removing & Saving into User Shortlisted Storage
+                        var user_shortlisted = localStorage.getItem("user_shortlisted");
+                        user_shortlisted = (user_shortlisted == null) ? [] : JSON.parse(user_shortlisted);
+                        removeFromArray(user_shortlisted, job_id);
+                        localStorage.setItem("user_shortlisted", JSON.stringify(user_shortlisted));
+                        $$(this).closest('li').addClass('moveblaster');
+                        setTimeout(() => {
+                            $$(this).closest('li').remove();
+                        }, 200);
+                        localStorage.setItem("reLoadTab_jobfiltersID", 'true');
+
+                        var total_shortlisted = parseInt($$('.myjobs-tabs .badge').html());
+                        total_shortlisted = parseInt(total_shortlisted) - 1;
+                        //$$('.myjobs-tabs .badge').html(total_shortlisted);
+                        $$('.myjobs-tabs .badge').html(user_shortlisted.length);
+                    }
+                });
+
+            },
+        },
+
+    };
+    function removeFromArray(arr, item) {
+        for (var i = arr.length; i--;) {
+            if (arr[i] === item) {
+                arr.splice(i, 1);
+            }
+        }
+    }
+</script>
